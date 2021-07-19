@@ -94,6 +94,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
                         Log.e("onDisMiss", "dismiss");
                     }
                 }).create().show();
+
                 btn_delete_friend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -102,7 +103,6 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
                     }
                 });
 
-                // ignore freind data
                 btn_ignore_friend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -112,58 +112,6 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
             }
         });
 
-//        friendListHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                View view = nInflater.inflate(R.layout.dialog_friend_profile,null);
-//                TextView tv_friend_email = view.findViewById(R.id.tv_friend_email);
-//                TextView tv_friend_name = view.findViewById(R.id.tv_friend_name);
-//                Button btn_delete_friend = view.findViewById(R.id.btn_delete_friend);
-//                Button btn_ignore_friend = view.findViewById(R.id.btn_ignore_friend);
-//
-//                tv_friend_email.setText(userAccount.getEmail());
-//                tv_friend_name.setText(userAccount.getUser_name());
-//
-//
-//                AlertDialog.Builder friendProfileDialog = new AlertDialog.Builder(friendListHolder.itemView.getContext());
-//                friendProfileDialog.setTitle("친구 프로필");
-//                friendProfileDialog.setView(view)
-////                        .setNeutralButton("닫기", new DialogInterface.OnClickListener() {   // 왼쪽으로 나와서 negative
-//                        .setNegativeButton("닫기", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                return;
-//                            }
-//                        })
-//                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                            @Override
-//                            public void onDismiss(DialogInterface dialog) {
-//
-//                                Log.e("onDisMiss", "dismiss");
-//                            }
-//                        })
-//                        .create()
-//                        .show();
-//
-//                // Writer : Park
-//                // Delete Friend Data
-//                btn_delete_friend.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        deleteFriend(userAccount);
-//
-//                    }
-//                });
-//
-//                // ignore freind data
-//                btn_ignore_friend.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        ignoreFriend(userAccount);
-//                    }
-//                });
-//            }
-//        });
     }
 
     @Override
