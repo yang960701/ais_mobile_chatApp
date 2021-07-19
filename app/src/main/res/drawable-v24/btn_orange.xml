@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- 상태-->
+    <item android:state_enabled="true">
+<!-- 모양-->
+        <shape >
+<!--            색깔-->
+            <solid android:color="#e3ae3e">
+
+
+            </solid>
+<!--            라운드-->
+            <corners android:radius="20dp">
+
+
+            </corners>
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+
+        <shape >
+            <!--            색깔-->
+            <solid android:color="#ffff04">
+
+
+            </solid>
+            <!--            라운드-->
+            <corners android:radius="20dp">
+
+
+            </corners>
+        </shape>
+    </item>
+</selector>

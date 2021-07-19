@@ -1,21 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ais_mobile_chatapp">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.chatapp" >
+    <!--    인터넷에 관함 접근권한 추가-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--    외부저장파일 읽어올수있는 권한-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!--    usercleartexttraffic 주소로된 이미지파일도 가져올수 있다-->
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Ais_mobile_chatApp">
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.Ais_mobile_chatApp" >
+        <activity android:name="com.example.ais_mobile_chatapp.user.ProfileActivity"
+            android:configChanges="screenSize|orientation" >
+
+
+        </activity>
+        <activity android:name="com.example.ais_mobile_chatapp.user.RegisterActivity" />
+        <activity
+
+            android:name="com.example.ais_mobile_chatapp.user.LoginActivity"
+            tools:ignore="Instantiatable" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.ais_mobile_chatapp.MainActivity"
+            tools:ignore="Instantiatable" >
+        </activity>
+        <activity
+            android:name="com.example.ais_mobile_chatapp.user.PasswordResetActivity">
+        </activity>
+
+
     </application>
 
 </manifest>
