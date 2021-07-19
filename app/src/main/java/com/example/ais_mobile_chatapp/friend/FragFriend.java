@@ -34,8 +34,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -52,8 +54,12 @@ public class FragFriend extends Fragment {
     private FirebaseAuth nFirebaseAuth;
     //실시간 데이터베이스
     private DatabaseReference nDatabaseRef;
-    private FirebaseFirestore nFirestore;
+//    private FirebaseFirestore nFirestore;
     private FirebaseUser firebaseUser;
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     private LayoutInflater nInflater;
     private View view;
@@ -66,10 +72,11 @@ public class FragFriend extends Fragment {
     private ArrayList<UserAccount> requestAddFriendList;
     private ArrayList<UserAccount> friendList;
 
-
     private UserAccount currentUserAccount;
 
     public static HashMap<Integer,UserAccount> request_add_friend_map;
+
+    private UserAccount user;
 
     public static FragFriend newInstance(){
         FragFriend fragFriend = new FragFriend();
@@ -84,12 +91,21 @@ public class FragFriend extends Fragment {
         nFirebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = nFirebaseAuth.getCurrentUser();
         nDatabaseRef = FirebaseDatabase.getInstance().getReference("ChatAPP");
-        nFirestore = FirebaseFirestore.getInstance();
+//        nFirestore = FirebaseFirestore.getInstance();
+
+        // recyclerview
+        recyclerView = view.findViewById(R.id.rv_friend_list);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        user = new UserAccount();
 
         getCurrentUserAccount();    // 현재 유저 Account 업데이트
         getUserAccounts();  // 전역변수 userAccounts 업데이트됨, 가독성을 위해 return값 ArrayList<UserAccount>로 변경해도됨
-        getRequestAddFriendList();  // 친구요청 List 업데이트됨
+//        getRequestAddFriendList();  // 친구요청 List 업데이트됨
         getFriendList();    // FriendList 업데이트됨
+
+        friendList = new ArrayList<>();
 
         iv_profile = view.findViewById(R.id.iv_profileSetting);
         tv_myName = view.findViewById(R.id.tv_myName);
@@ -105,32 +121,32 @@ public class FragFriend extends Fragment {
     }
 
     public void getCurrentUserAccount(){
-        nFirestore.collection("relation")
-                .document(firebaseUser.getEmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
-                        if (!task.isSuccessful()) {
-                            Log.e("getCurrentUserAccount", "Error getting data", task.getException());
-                        } else {
-                            Log.e("getCurrentUserAccount", String.valueOf(task.getResult().getData()));
-                            // 자동 casting 못찾아서 수동으로 casting 했습니다
-                            HashMap<String, Object> value = (HashMap<String, Object>) task.getResult().getData();
-                            currentUserAccount = new UserAccount(value.get("idToken").toString()
-                                                                ,value.get("email").toString()
-                                                                ,value.get("user_name").toString());
-
-                            tv_myName.setText("이름 : "+currentUserAccount.getUser_name());
-                            tv_state.setText("상태 : "+String.valueOf(task.isSuccessful()));
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull @NotNull Exception e) {
-                        Log.e("onFailure", e.getMessage());
-                    }
-                });
+//        nFirestore.collection("relation")
+//                .document(firebaseUser.getEmail())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+//                        if (!task.isSuccessful()) {
+//                            Log.e("getCurrentUserAccount", "Error getting data", task.getException());
+//                        } else {
+//                            Log.e("getCurrentUserAccount", String.valueOf(task.getResult().getData()));
+//                            // 자동 casting 못찾아서 수동으로 casting 했습니다
+//                            HashMap<String, Object> value = (HashMap<String, Object>) task.getResult().getData();
+//                            currentUserAccount = new UserAccount(value.get("idToken").toString()
+//                                                                ,value.get("email").toString()
+//                                                                ,value.get("user_name").toString());
+//
+//                            tv_myName.setText("이름 : "+currentUserAccount.getUser_name());
+//                            tv_state.setText("상태 : "+String.valueOf(task.isSuccessful()));
+//                        }
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull @NotNull Exception e) {
+//                        Log.e("onFailure", e.getMessage());
+//                    }
+//                });
     }
 
     public void getUserAccounts() {
@@ -163,85 +179,81 @@ public class FragFriend extends Fragment {
 
     }
 
-    public void requestAddFriend(UserAccount friendAccount) {
-
-        nFirestore.collection("relation")
-                .document(friendAccount.getEmail())
-                .update("request_add_friend_list", FieldValue.arrayUnion(currentUserAccount))
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<Void> task) {
-                        if(!task.isSuccessful()){
-                            Log.e("complete", "but not successful");
-                        }else{
-                            Toast.makeText(getContext(), "친구요청 성공!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull @NotNull Exception e) {
-                        Log.e("failure", e.getMessage());
-                    }
-                });
-    }
-
-    public void getRequestAddFriendList(){
-        nFirestore.collection("relation")
-                .document(firebaseUser.getEmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().get("request_add_friend_list") != null) {
-                                // 자동 casting 못찾아서 수동으로 casting 했습니다
-
-                                ObjectMapper mapper = new ObjectMapper();
-                                ArrayList<UserAccount> list = mapper.convertValue(task.getResult().get("request_add_friend_list")
-                                        , new TypeReference<ArrayList<UserAccount>>() {});
-                                if(list != null){
-                                    requestAddFriendList = list;
-                                    btn_request_add_friend_list_view.setText("친구요청 ("+requestAddFriendList.size()+")");
-                                } else{
-                                    btn_request_add_friend_list_view.setText("친구요청 (0)");
-                                }
-                            }
-                        }
-                    }
-                });
-    }
-
+//    public void requestAddFriend(UserAccount friendAccount) {
+//
+//        nFirestore.collection("relation")
+//                .document(friendAccount.getEmail())
+//                .update("request_add_friend_list", FieldValue.arrayUnion(currentUserAccount))
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+//                        if(!task.isSuccessful()){
+//                            Log.e("complete", "but not successful");
+//                        }else{
+//                            Toast.makeText(getContext(), "친구요청 성공!", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull @NotNull Exception e) {
+//                        Log.e("failure", e.getMessage());
+//                    }
+//                });
+//    }
+//
+//    public void getRequestAddFriendList(){
+//        nFirestore.collection("relation")
+//                .document(firebaseUser.getEmail())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            if (task.getResult().get("request_add_friend_list") != null) {
+//                                // 자동 casting 못찾아서 수동으로 casting 했습니다
+//
+//                                ObjectMapper mapper = new ObjectMapper();
+//                                ArrayList<UserAccount> list = mapper.convertValue(task.getResult().get("request_add_friend_list")
+//                                        , new TypeReference<ArrayList<UserAccount>>() {});
+//                                if(list != null){
+//                                    requestAddFriendList = list;
+//                                    btn_request_add_friend_list_view.setText("친구요청 ("+requestAddFriendList.size()+")");
+//                                } else{
+//                                    btn_request_add_friend_list_view.setText("친구요청 (0)");
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
+//    }
+//
     public void getFriendList(){
-        nFirestore.collection("relation")
-                .document(firebaseUser.getEmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().get("friend_list") != null) {
-                                // 자동 casting 못찾아서 수동으로 casting 했습니다
+        nDatabaseRef.child("Relation").child(firebaseUser.getUid()).child("FriendList")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                Log.e("User Uid ", snapshot.getValue().toString());
+                friendList.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                                ObjectMapper mapper = new ObjectMapper();
-                                ArrayList<UserAccount> list = mapper.convertValue(task.getResult().get("friend_list")
-                                        , new TypeReference<ArrayList<UserAccount>>() {});
+                    UserAccount user = dataSnapshot.getValue(UserAccount.class);
+                    Log.e("user1", user.toString());
+                    friendList.add(user);
 
-                                if(list != null){
-                                    friendList = list;
-                                }
+                }
+                adapter.notifyDataSetChanged(); // List save and refresh
 
-                                RecyclerView rv_friend_list = view.findViewById(R.id.rv_friend_list);
-                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+            }
 
-                                rv_friend_list.setLayoutManager(layoutManager);
-                                RecyclerView.Adapter friendListAdapter = new FriendListAdapter(friendList, nInflater, firebaseUser);
-                                rv_friend_list.setAdapter(friendListAdapter);
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError errr) {
 
-                            }
-                        }
-                    }
-                });
+            }
+        });
+
+        adapter = new FriendListAdapter(friendList, getActivity(), firebaseUser);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -256,6 +268,8 @@ public class FragFriend extends Fragment {
             }
         });
 
+        getFriendList();
+
         btn_add_friend_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -269,15 +283,15 @@ public class FragFriend extends Fragment {
                         .setPositiveButton("요청", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ArrayList<UserAccount> result = new ArrayList<>();
-                                if(request_add_friend_map != null){
-                                    request_add_friend_map.forEach((key, userAccount) -> {
-                                        if(userAccount != null) {
-                                            requestAddFriend(userAccount);
-                                        }
-                                    });
-                                }
-                                request_add_friend_map.clear();
+//                                ArrayList<UserAccount> result = new ArrayList<>();
+//                                if(request_add_friend_map != null){
+//                                    request_add_friend_map.forEach((key, userAccount) -> {
+//                                        if(userAccount != null) {
+//                                            requestAddFriend(userAccount);
+//                                        }
+//                                    });
+//                                }
+//                                request_add_friend_map.clear();
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -311,13 +325,14 @@ public class FragFriend extends Fragment {
 
                         Log.e("userAccounstByUserName", userAccountsByUserName.toString());
 
-                        RecyclerView rv_add_friend_list = view.findViewById(R.id.rv_add_friend_list);
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-                        rv_add_friend_list.setLayoutManager(layoutManager);
-                        RecyclerView.Adapter addFriendListAdapter = new AddFriendListAdapter(userAccountsByUserName);
-                        rv_add_friend_list.setAdapter(addFriendListAdapter);
+//                        RecyclerView rv_add_friend_list = view.findViewById(R.id.rv_add_friend_list);
+//                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+//                        rv_add_friend_list.setLayoutManager(layoutManager);
+//                        RecyclerView.Adapter addFriendListAdapter = new AddFriendListAdapter(userAccountsByUserName);
+//                        rv_add_friend_list.setAdapter(addFriendListAdapter);
                     }
                 });
+
             }
         });
 
@@ -341,19 +356,19 @@ public class FragFriend extends Fragment {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 Log.e("dialog", "onDismiss");
-                                getRequestAddFriendList();
-                                getFriendList();
+//                                getRequestAddFriendList();
+//                                getFriendList();
                             }
                         })
                         .create()
                         .show();
 
-                Log.e("btn_request_add_friend", currentUserAccount+"");
-                RecyclerView rv_request_add_friend_list = view.findViewById(R.id.rv_request_add_friend_list);
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-                rv_request_add_friend_list.setLayoutManager(layoutManager);
-                RecyclerView.Adapter requestAddFriendListAdapter = new RequestAddFriendListAdapter(requestAddFriendList, nFirestore, currentUserAccount);
-                rv_request_add_friend_list.setAdapter(requestAddFriendListAdapter);
+//                Log.e("btn_request_add_friend", currentUserAccount+"");
+//                RecyclerView rv_request_add_friend_list = view.findViewById(R.id.rv_request_add_friend_list);
+//                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+//                rv_request_add_friend_list.setLayoutManager(layoutManager);
+//                RecyclerView.Adapter requestAddFriendListAdapter = new RequestAddFriendListAdapter(requestAddFriendList, nFirestore, currentUserAccount);
+//                rv_request_add_friend_list.setAdapter(requestAddFriendListAdapter);
 
             }
         });
