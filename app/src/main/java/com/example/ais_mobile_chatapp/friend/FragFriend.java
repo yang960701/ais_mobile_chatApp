@@ -233,25 +233,17 @@ public class FragFriend extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                Log.e("User Uid ", snapshot.getValue().toString());
                 friendList.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-
                     UserAccount user = dataSnapshot.getValue(UserAccount.class);
-                    Log.e("user1", user.toString());
                     friendList.add(user);
-
                 }
                 adapter.notifyDataSetChanged(); // List save and refresh
-
             }
-
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError errr) {
-
             }
         });
-
         adapter = new FriendListAdapter(friendList, getActivity(), firebaseUser);
         recyclerView.setAdapter(adapter);
     }
