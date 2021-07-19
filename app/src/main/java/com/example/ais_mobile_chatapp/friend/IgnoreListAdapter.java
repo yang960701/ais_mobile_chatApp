@@ -1,6 +1,7 @@
 package com.example.ais_mobile_chatapp.friend;
 
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.ais_mobile_chatapp.user.UserAccount;
 
 import com.example.chatapp.R;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +30,8 @@ public class IgnoreListAdapter extends RecyclerView.Adapter<IgnoreListAdapter.Cu
     private ArrayList<UserAccount> ignoreList;
     private FirebaseUser firebaseUser;
     private LayoutInflater nInflater;
+    private Context context;
+    private DatabaseReference nDatabaseRef;
 
     private CustomViewHolder viewHolder;
 
@@ -36,10 +40,12 @@ public class IgnoreListAdapter extends RecyclerView.Adapter<IgnoreListAdapter.Cu
     private ProfileActivity profileActivity;
 
 
-    public IgnoreListAdapter(ArrayList<UserAccount> ignoreList , LayoutInflater nInflater, FirebaseUser firebaseUser) {
+    public IgnoreListAdapter(ArrayList<UserAccount> ignoreList ,Context context, FirebaseUser firebaseUser, LayoutInflater nInflater, DatabaseReference nDatabaseRef) {
         this.ignoreList = ignoreList;
         this.firebaseUser = firebaseUser;
         this.nInflater = nInflater;
+        this.context = context;
+        this.nDatabaseRef = nDatabaseRef;
 
     }
 
