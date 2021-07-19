@@ -26,8 +26,6 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth nFirebaseAuth;
     //실시간 데이터베이스
     private DatabaseReference nDatabaseRef;
-    //db
-    private FirebaseFirestore nFirestore;
 
     private EditText ti_Email, ti_Pwd,ti_pWdCheck, ti_UserName;
     private Button btn_Register;
@@ -39,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         nFirebaseAuth = FirebaseAuth.getInstance();
         nDatabaseRef = FirebaseDatabase.getInstance().getReference("ChatAPP");
-        nFirestore = FirebaseFirestore.getInstance();
+
 
         ti_Email = findViewById(R.id.ti_email);
         ti_pWdCheck = findViewById(R.id.ti_pwdcheck);
@@ -73,8 +71,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                                      //setValue -> 데이터베이스에 insert
                                      nDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
-                                     nFirestore.collection("relation").document(firebaseUser.getEmail()).set(account);
-
 
                                      Toast.makeText(RegisterActivity.this, "회원가입에 성공하였습니다.", Toast.LENGTH_SHORT).show();
 
