@@ -102,10 +102,11 @@ public class FragFriend extends Fragment {
 
         getCurrentUserAccount();    // 현재 유저 Account 업데이트
         getUserAccounts();  // 전역변수 userAccounts 업데이트됨, 가독성을 위해 return값 ArrayList<UserAccount>로 변경해도됨
-//        getRequestAddFriendList();  // 친구요청 List 업데이트됨
+        getRequestAddFriendList();  // 친구요청 List 업데이트됨
         getFriendList();    // FriendList 업데이트됨
 
         friendList = new ArrayList<>();
+        requestAddFriendList = new ArrayList<>();
 
         iv_profile = view.findViewById(R.id.iv_profileSetting);
         tv_myName = view.findViewById(R.id.tv_myName);
@@ -164,6 +165,7 @@ public class FragFriend extends Fragment {
 
                             // 자동 casting 못찾아서 수동으로 casting 했습니다
                             HashMap<String,Object> value = (HashMap<String, Object>) task.getResult().getValue();
+                            Log.e("Error", task.getResult().getValue().toString());
                             ObjectMapper mapper = new ObjectMapper();
                             HashMap<String,UserAccount> map = mapper.convertValue(value, new TypeReference<HashMap<String,UserAccount>>() {});
 
@@ -202,7 +204,8 @@ public class FragFriend extends Fragment {
 //                });
 //    }
 //
-//    public void getRequestAddFriendList(){
+    public void getRequestAddFriendList(){
+
 //        nFirestore.collection("relation")
 //                .document(firebaseUser.getEmail())
 //                .get()
@@ -226,8 +229,8 @@ public class FragFriend extends Fragment {
 //                        }
 //                    }
 //                });
-//    }
-//
+    }
+
     public void getFriendList(){
         nDatabaseRef.child("Relation").child(firebaseUser.getUid()).child("FriendList")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -244,7 +247,7 @@ public class FragFriend extends Fragment {
             public void onCancelled(@NonNull @NotNull DatabaseError errr) {
             }
         });
-        adapter = new FriendListAdapter(friendList, getActivity(), firebaseUser);
+        adapter = new FriendListAdapter(friendList, getActivity(), firebaseUser, nInflater, nDatabaseRef);
         recyclerView.setAdapter(adapter);
     }
 
@@ -348,8 +351,8 @@ public class FragFriend extends Fragment {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 Log.e("dialog", "onDismiss");
-//                                getRequestAddFriendList();
-//                                getFriendList();
+                                getRequestAddFriendList();
+                                getFriendList();
                             }
                         })
                         .create()

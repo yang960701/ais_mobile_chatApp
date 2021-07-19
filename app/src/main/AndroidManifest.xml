@@ -7,6 +7,8 @@
     <!--    외부저장파일 읽어올수있는 권한-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <!--    usercleartexttraffic 주소로된 이미지파일도 가져올수 있다-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
