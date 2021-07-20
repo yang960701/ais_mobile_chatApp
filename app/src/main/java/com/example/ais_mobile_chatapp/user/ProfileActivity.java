@@ -17,18 +17,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ais_mobile_chatapp.friend.FriendListAdapter;
 import com.example.ais_mobile_chatapp.friend.IgnoreListAdapter;
 import com.example.chatapp.R;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,16 +30,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
     ImageView iv_image;
@@ -188,8 +178,6 @@ public class ProfileActivity extends AppCompatActivity {
                                 return;
                             }
                         }).create().show();
-
-//                        adapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -197,69 +185,6 @@ public class ProfileActivity extends AppCompatActivity {
 
                     }
                 });
-//        adapter = new IgnoreListAdapter(ignoreList, this, firebaseUser, nInflater, nDatabaseRef);
-//        recyclerView.setAdapter(adapter);
-//        nFirestore.collection("relation").document(firebaseUser.getEmail().toString()).get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            if (task.getResult().get("ignore_list") != null){
-//                                Log.e("Check", task.getResult().getData().toString());
-//                                ObjectMapper mapper = new ObjectMapper();
-//                                ArrayList<UserAccount> list = mapper.convertValue(task.getResult().get("ignore_list")
-//                                        , new TypeReference<ArrayList<UserAccount>>() {});
-//
-//                                if(list != null){
-//                                    friendList = list;
-//                                }
-//
-//                                Log.e("Check", friendList.toString());
-//
-//                                View view = nInflater.inflate(R.layout.dialog_ignore_friend, null);
-//
-//                                RecyclerView rv_friend_list = view.findViewById(R.id.rv_ignore_friend_list);
-//                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ProfileActivity.this);
-//
-//                                rv_friend_list.setLayoutManager(layoutManager);
-//                                RecyclerView.Adapter ignoreListAdapter = new IgnoreListAdapter(friendList, nInflater, firebaseUser);
-//                                rv_friend_list.setAdapter(ignoreListAdapter);
-//                                AlertDialog.Builder addIgnoreDialog = new AlertDialog.Builder(ProfileActivity.this);
-//
-//
-//                                addIgnoreDialog.setTitle("차단 목록");
-//
-//                                addIgnoreDialog.setView(view).setPositiveButton("해제", new DialogInterface.OnClickListener() {
-//                                    @RequiresApi(api = Build.VERSION_CODES.N)
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//
-//                                        Log.e("hashmap", ignore_friend_map.toString());
-//                                        Log.e("Positive", "Positive click");
-//
-//                                        if(ignore_friend_map != null){
-//                                            ignore_friend_map.forEach((key, userAccount) -> {
-//                                                if(userAccount != null) {
-//                                                    Log.e("UserAccount", userAccount.toString());
-//                                                    requestIgnoreFriend(userAccount);
-//                                                }
-//                                            });
-//                                        }else{
-//                                            ignore_friend_map.clear();
-//                                        }
-//                                    }
-//                                })
-//
-//                                        .setNegativeButton("닫기", new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        Log.e("Negative", "negative click");
-//                                    }
-//                                }).create().show();
-//                            }
-//                        }
-//                    }
-//                });
     }
 
     public void requestIgnoreFriend(UserAccount userAccount){
