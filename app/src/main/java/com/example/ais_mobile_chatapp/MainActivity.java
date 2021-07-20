@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.chatapp.R;
 import com.google.android.material.tabs.TabLayout;
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Log.e("하하","히히");
         tabLayout = findViewById(R.id.tab_layout);
         pager2 = findViewById(R.id.viewPager);
 
