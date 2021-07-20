@@ -256,7 +256,7 @@ public class FragFriend extends Fragment {
                     }
         });
 
-        friendListAdapter = new FriendListAdapter(friendList);
+        friendListAdapter = new FriendListAdapter(friendList, nDatabaseRef, firebaseUser);
         friendListRV.setAdapter(friendListAdapter);
 
     }

@@ -33,9 +33,13 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
     private ArrayList<UserAccount> friendList;
     private int row_index = -1;
+    private DatabaseReference nDatabaseRef;
+    private FirebaseUser firebaseUser;
 
-    public FriendListAdapter(ArrayList<UserAccount> friendList) {
+    public FriendListAdapter(ArrayList<UserAccount> friendList, DatabaseReference nDatabaseRef, FirebaseUser firebaseUser) {
         this.friendList = friendList;
+        this.nDatabaseRef = nDatabaseRef;
+        this.firebaseUser = firebaseUser;
     }
 
     @NonNull
@@ -160,9 +164,14 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
     public void deleteFriend(UserAccount userAccount){
         Log.e("delete", userAccount.toString());
+        nDatabaseRef.child("Relation").child(firebaseUser.getUid()).child("FriendList")
+                .child(userAccount.getIdToken()).removeValue();
 
     }
     public void ignoreFriend(UserAccount userAccount){
         Log.e("ignore", userAccount.toString());
+        deleteFriend(userAccount);
+        nDatabaseRef.child("Relation").child(firebaseUser.getUid()).child("IgnoreList")
+                .child(userAccount.getIdToken()).setValue(userAccount);
     }
 }
