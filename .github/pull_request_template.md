@@ -1,5 +1,5 @@
 ## 이슈 번호 : 
-Closes # xx
+Closes #xx
 
 
 ## 변경된 코드
