@@ -18,27 +18,28 @@ import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class RequestAddFriendListAdapter extends RecyclerView.Adapter<RequestAddFriendListAdapter.RequestAddFriendListHolder> {
 
     private ArrayList<UserAccount> requestAddFriendList;
     private RequestAddFriendListHolder requestAddFriendListHolder;
-    private FirebaseFirestore nFirestore;
     private UserAccount currentUserAccount;
+    private DatabaseReference nDatabaseRef;
 
-    public RequestAddFriendListAdapter(ArrayList<UserAccount> requestAddFriendList, FirebaseFirestore nFirestore, UserAccount currentUserAccount) {
-
+    public RequestAddFriendListAdapter(ArrayList<UserAccount> requestAddFriendList, UserAccount currentUserAccount) {
         this.requestAddFriendList = requestAddFriendList;
-        this.nFirestore = nFirestore;
         this.currentUserAccount = currentUserAccount;
-
     }
 
     @NonNull
@@ -48,6 +49,7 @@ public class RequestAddFriendListAdapter extends RecyclerView.Adapter<RequestAdd
         View holderView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_request_add_friend_list,parent,false);
         requestAddFriendListHolder = new RequestAddFriendListHolder(holderView);
 
+        nDatabaseRef = FirebaseDatabase.getInstance().getReference("ChatAPP");
         return requestAddFriendListHolder;
     }
 
@@ -61,20 +63,36 @@ public class RequestAddFriendListAdapter extends RecyclerView.Adapter<RequestAdd
         requestAddFriendListHolder.btn_request_add_friend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("requestAddFriendLis", currentUserAccount+"");
 
-                nFirestore.collection("relation")
-                        .document(currentUserAccount.getEmail())
-                        .update("request_add_friend_list", FieldValue.arrayRemove(userAccount)
-                            ,"friend_list", FieldValue.arrayUnion(userAccount))
+                nDatabaseRef.child("Relation")
+                        .child(currentUserAccount.getIdToken())
+                        .child("RequestAddFriendList")
+                        .child(userAccount.getIdToken())
+                        .removeValue()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                if(task.isSuccessful()) {
+                                    Log.e("RequestAddFriendList", "remove successs");
+                                }
+                            }
+                        });
+
+                Map<String,Object> updates = new HashMap<>();
+                updates.put(currentUserAccount.getIdToken()+"/FriendList/"+userAccount.getIdToken(), userAccount);
+                updates.put(userAccount.getIdToken()+"/FriendList/"+currentUserAccount.getIdToken(), currentUserAccount);
+
+                nDatabaseRef.child("Relation")
+                        .updateChildren(updates)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull @NotNull Task<Void> task) {
                                 if(!task.isSuccessful()){
-                                    Log.e("btn_request_add_friend", "but not successful");
+                                    Log.e("complete", "but not successful");
                                 }else{
-                                    Log.e("btn_request_add_friend", "successful");
-
+                                    requestAddFriendList.remove(position);
+                                    notifyItemRemoved(position);
+                                    Toast.makeText(v.getContext(), "친구추가 성공!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
@@ -82,31 +100,9 @@ public class RequestAddFriendListAdapter extends RecyclerView.Adapter<RequestAdd
                             @Override
                             public void onFailure(@NonNull @NotNull Exception e) {
                                 Log.e("failure", e.getMessage());
+                                Toast.makeText(v.getContext(), "친구추가 실패, 다시 한번 확인하시오", Toast.LENGTH_SHORT).show();
                             }
                         });
-
-                nFirestore.collection("relation")
-                        .document(userAccount.getEmail())
-                        .update("friend_list", FieldValue.arrayUnion(currentUserAccount))
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull @NotNull Task<Void> task) {
-                                if(!task.isSuccessful()){
-                                    Log.e("btn_request_add_friend", "but not successful");
-                                }else{
-                                    Toast.makeText(v.getContext(), "친구요청 성공!", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull @NotNull Exception e) {
-                                Log.e("failure", e.getMessage());
-                            }
-                        });
-
-                requestAddFriendList.remove(position);
-                notifyItemRemoved(position);
             }
         });
 
