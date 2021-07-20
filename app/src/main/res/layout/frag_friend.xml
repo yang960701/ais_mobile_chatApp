@@ -1,89 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     >
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         >
 
-        <TextView
-            android:id="@+id/tv_friend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="40sp"
-            android:text="친구"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:orientation="vertical"
-            >
-            <ImageView
-                android:id="@+id/iv_profileSetting"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/gear_icon"
-                android:layout_gravity="right"/>
-            <LinearLayout
-                android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_profile_setting_view"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/gear_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
+
+
+        <ImageView
+            android:id="@+id/iv_my_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:elevation="20dp"
+            android:src="@mipmap/ic_launcher_round"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="@+id/my_information"
+            app:layout_constraintEnd_toEndOf="@+id/my_information"
+            app:layout_constraintStart_toStartOf="@+id/my_information"
+            app:layout_constraintTop_toTopOf="@+id/my_information" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/my_information"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:background="@drawable/my_profile_bg"
+            android:elevation="3dp"
+            app:layout_constraintEnd_toEndOf="@+id/iv_profile_setting_view"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_profile_setting_view">
+
+            <TextView
+                android:id="@+id/tv_my_user_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                >
-                <ImageView
-                    android:id="@+id/iv_image"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_launcher_background"
+                android:text="NAME"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias=".1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias=".15" />
 
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_my_intro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Text your Intro"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias=".1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_my_user_name"
+                app:layout_constraintVertical_bias=".15" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:id="@+id/tv_myName"
-                        android:layout_width="match_parent"
-                        android:layout_height="30sp"
-                        android:text="이름"
-                        android:textSize="20sp"/>
-                    <TextView
-                        android:id="@+id/tv_state"
-                        android:layout_width="match_parent"
-                        android:layout_height="30sp"
-                        android:text="상태"
-                        android:textSize="20sp"/>
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_add_friend_view"
+        <View
+            android:id="@+id/boundary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="친구추가" />
-        <Button
-            android:id="@+id/btn_request_add_friend_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="친구요청 (0)" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_friend_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
+            android:layout_height="2dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="0dp"
+            android:background="#BBDEFB"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/my_information"
             />
-    </LinearLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:elevation="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/my_information"
+            app:layout_constraintStart_toStartOf="@+id/my_information"
+            app:layout_constraintTop_toBottomOf="@+id/boundary"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0"
+            >
 
-</LinearLayout>
+            <EditText
+                android:id="@+id/et_friend_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/et_friend_search_bg"
+                android:hint="친구 검색"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/rv_friend_list"
+                app:layout_constraintEnd_toEndOf="@+id/rv_friend_list"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@+id/rv_friend_list"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintWidth_percent="0.5" />
+
+            <ImageView
+                android:id="@+id/iv_add_friend_view"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:paddingLeft="10dp"
+                android:src="@drawable/add_friend_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/et_friend_search"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toEndOf="@+id/et_friend_search"
+                app:layout_constraintTop_toTopOf="@+id/et_friend_search"
+                app:layout_constraintVertical_bias="0.5"
+                />
+
+            <ImageView
+                android:id="@+id/iv_request_friend_view"
+                android:layout_width="30dp"
+                android:layout_height="0dp"
+                android:src="@drawable/request_friend_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_add_friend_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@+id/iv_add_friend_view"
+                app:layout_constraintTop_toTopOf="@+id/iv_add_friend_view"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/tv_request_friend_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(0)"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_request_friend_view"
+                app:layout_constraintEnd_toEndOf="@+id/iv_request_friend_view"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@+id/iv_request_friend_view"
+                app:layout_constraintTop_toTopOf="@+id/iv_request_friend_view"
+                app:layout_constraintVertical_bias="0" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_friend_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.482"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_friend_search"
+                app:layout_constraintVertical_bias="0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -1,9 +1,10 @@
 package com.example.ais_mobile_chatapp.user;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 //사용자 계정 정보 모델 클래스
-public class UserAccount {
+public class UserAccount implements Serializable {
     private String idToken; //FirebaseUid(고유 정보)
     private String email;
     private String password;

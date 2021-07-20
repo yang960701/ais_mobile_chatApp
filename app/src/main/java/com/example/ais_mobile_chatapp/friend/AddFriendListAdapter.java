@@ -53,9 +53,9 @@ public class AddFriendListAdapter extends RecyclerView.Adapter<AddFriendListAdap
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // true이면 값 넣고, false이면 null
                 if(isChecked) {
-                    FragFriend.request_add_friend_map.put(position, userAccount);
+                    FragFriend.request_add_friend_map.put(userAccount.getIdToken(), userAccount);
                 }else{
-                    FragFriend.request_add_friend_map.put(position, null);
+                    FragFriend.request_add_friend_map.put(userAccount.getIdToken(), null);
                 }
             }
         });
