@@ -41,7 +41,6 @@ public class LoginActivity extends AppCompatActivity {
 
         et_Email = findViewById(R.id.et_email);
         et_pwd = findViewById(R.id.et_pwd);
-
         linearLayout_login = findViewById(R.id.LinerarLayout_login);
 
         linearLayout_login.setOnClickListener(new View.OnClickListener() {
@@ -91,5 +90,11 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        linearLayout_login.performClick();
     }
 }
