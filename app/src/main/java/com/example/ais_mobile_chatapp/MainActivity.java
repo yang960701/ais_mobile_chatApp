@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.e("하하","히히");
+        Log.e("헤헤","효효");
         tabLayout = findViewById(R.id.tab_layout);
         pager2 = findViewById(R.id.viewPager);
 
